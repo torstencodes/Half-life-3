@@ -11,12 +11,12 @@ import javax.swing.*;
  * 3. Draw our graphics in the paintComponent method
  */
 
-public class Game extends JPanel {
+public class Game extends JKTNTPanel {
 	private Image image;
 
 	public Game(String text) {
 		super();
-		image = new ImageIcon("/201GUI/deadIsland.png").getImage();
+		image = new ImageIcon("deadIsland.png").getImage();
 	}
 	
 	@Override // This method already exists in JButton
@@ -25,7 +25,8 @@ public class Game extends JPanel {
 
 		// Starting here, draw our graphics
 		// All graphics get drawn by starting with g.
-		g.drawImage(image, 50, 50, this);
+		g.drawImage(image, 0, 0, 250,300, this);
+		
 
 	}
 }

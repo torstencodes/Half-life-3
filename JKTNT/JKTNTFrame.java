@@ -1,11 +1,12 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 
 import javax.swing.*;
 
 @SuppressWarnings("serial")
 public class JKTNTFrame extends JFrame {
-//instance variables
+
 	private JLabel label;
 	private JKTNTFrame frame;
 	private JKTNTPanel mainScreen;
@@ -17,6 +18,7 @@ public class JKTNTFrame extends JFrame {
 	private TextField user;
 	private TextField pass;
 	private btnListener clickListener;
+	private Game g;
 
 	public static void main(String[] args) {
 		new JKTNTFrame();
@@ -41,8 +43,10 @@ public class JKTNTFrame extends JFrame {
 		setupTopPanel();
 		setupMiddlePanel();
 		setupBottomPanel();
-		
-		
+
+//		this.setLocationRelativeTo(null); // starts center screen
+//		this.setLayout(new GridLayout(10, 10));
+//		this.setVisible(true);
 
 		this.pack();
 		this.setVisible(true);
@@ -67,12 +71,9 @@ public class JKTNTFrame extends JFrame {
 		top.setVisible(true);
 		// Once the panel is set up, add it to the frame
 		this.add(top, BorderLayout.NORTH);
-	}
-	
-	
 
-	
-	
+	}
+
 	// Sets up the middle panel where the graphics will go
 	private void setupMiddlePanel() {
 		mainScreen = new JKTNTPanel();
@@ -93,10 +94,10 @@ public class JKTNTFrame extends JFrame {
 		clear.addActionListener(clickListener);
 
 		// creates the username and password text fields
-		//user = new TextField("", 20);
-		//pass = new TextField("", 20);
-		//mainScreen.add(user);
-		//mainScreen.add(pass);
+		user = new TextField("", 20);
+		pass = new TextField("", 20);
+		mainScreen.add(user);
+		mainScreen.add(pass);
 
 		// creates a Login button with event listener attached
 		login = new JButton("Login");
@@ -104,21 +105,31 @@ public class JKTNTFrame extends JFrame {
 		login.addActionListener(clickListener);
 
 		mainScreen.setVisible(true);
+
+		
+		
 		// This anonymous GraphicsPanel should be replaced with an instance variable
 		this.add(mainScreen, BorderLayout.CENTER);
 		
-		//set up a panel inside the mainScreen panel to display games
+		g = new Game("Dead Island");
+		// set up a panel inside the mainScreen panel to display games
 		gamePanel = new JKTNTPanel();
 		gamePanel.setPreferredSize(mainScreen.getMaximumSize());
 		gamePanel.setLayout(new FlowLayout());
 		mainScreen.add(gamePanel);
-		
+		gamePanel.add(g);
+		// this.getContentPane().add(g);
+		repaint();
 	}
 
 	// Sets up the bottom panel with buttons
 	private void setupBottomPanel() {
 		JPanel bottom = new JPanel();
 		bottom.setLayout(new FlowLayout());
+
+		// load the images
+		// add the game to the display
+
 		// Now that the panel is set up, add it to the frame
 		this.add(bottom, BorderLayout.SOUTH);
 	}
@@ -143,8 +154,6 @@ public class JKTNTFrame extends JFrame {
 				// do nothing yet
 				mainScreen.setBackground(new Color(0, 0, 0));
 			}
-
-			repaint();
 		}
 
 	}
