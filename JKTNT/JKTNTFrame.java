@@ -109,6 +109,7 @@ public class JKTNTFrame extends JFrame {
 		
 		//set up a panel inside the mainScreen panel to display games
 		gamePanel = new JKTNTPanel();
+		gamePanel.setPreferredSize(mainScreen.getMaximumSize());
 		gamePanel.setLayout(new FlowLayout());
 		mainScreen.add(gamePanel);
 		
