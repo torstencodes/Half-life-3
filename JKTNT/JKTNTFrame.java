@@ -9,6 +9,7 @@ public class JKTNTFrame extends JFrame {
 	private JLabel label;
 	private JKTNTFrame frame;
 	private JKTNTPanel mainScreen;
+	private JKTNTPanel gamePanel;
 	private JButton search;
 	private JButton clear;
 	private JButton login;
@@ -40,6 +41,8 @@ public class JKTNTFrame extends JFrame {
 		setupTopPanel();
 		setupMiddlePanel();
 		setupBottomPanel();
+		
+		
 
 		this.pack();
 		this.setVisible(true);
@@ -64,9 +67,12 @@ public class JKTNTFrame extends JFrame {
 		top.setVisible(true);
 		// Once the panel is set up, add it to the frame
 		this.add(top, BorderLayout.NORTH);
-
 	}
+	
+	
 
+	
+	
 	// Sets up the middle panel where the graphics will go
 	private void setupMiddlePanel() {
 		mainScreen = new JKTNTPanel();
@@ -85,12 +91,12 @@ public class JKTNTFrame extends JFrame {
 		clear = new JButton("Clear");
 		mainScreen.add(clear);
 		clear.addActionListener(clickListener);
-		
+
 		// creates the username and password text fields
-		user = new TextField("", 20);
-		pass = new TextField("", 20);
-		mainScreen.add(user);
-		mainScreen.add(pass);
+		//user = new TextField("", 20);
+		//pass = new TextField("", 20);
+		//mainScreen.add(user);
+		//mainScreen.add(pass);
 
 		// creates a Login button with event listener attached
 		login = new JButton("Login");
@@ -100,6 +106,12 @@ public class JKTNTFrame extends JFrame {
 		mainScreen.setVisible(true);
 		// This anonymous GraphicsPanel should be replaced with an instance variable
 		this.add(mainScreen, BorderLayout.CENTER);
+		
+		//set up a panel inside the mainScreen panel to display games
+		gamePanel = new JKTNTPanel();
+		gamePanel.setLayout(new FlowLayout());
+		mainScreen.add(gamePanel);
+		
 	}
 
 	// Sets up the bottom panel with buttons
