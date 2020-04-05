@@ -6,7 +6,7 @@ import javax.swing.*;
 
 @SuppressWarnings("serial")
 public class JKTNTPanel extends JPanel {
-	
+        // comment
 	/**
 	 * 
 	 */

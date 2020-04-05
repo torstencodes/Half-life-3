@@ -5,7 +5,7 @@ import javax.swing.*;
 
 @SuppressWarnings("serial")
 public class JKTNTFrame extends JFrame {
-
+//instance variables
 	private JLabel label;
 	private JKTNTFrame frame;
 	private JKTNTPanel mainScreen;
