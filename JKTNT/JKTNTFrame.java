@@ -19,6 +19,7 @@ public class JKTNTFrame extends JFrame {
 	private TextField pass;
 	private btnListener clickListener;
 	private Game g;
+	private Game g2;
 
 	public static void main(String[] args) {
 		new JKTNTFrame();
@@ -30,7 +31,7 @@ public class JKTNTFrame extends JFrame {
 
 		// Line of code to set the size and location
 
-		this.setSize(new Dimension(500, 500));
+		this.setSize(new Dimension(800, 800));
 		this.setLocationRelativeTo(null); // starts center screen
 		this.setLayout(new BorderLayout());
 		clickListener = new btnListener();
@@ -43,6 +44,7 @@ public class JKTNTFrame extends JFrame {
 		setupTopPanel();
 		setupMiddlePanel();
 		setupBottomPanel();
+		setupGames();
 
 //		this.setLocationRelativeTo(null); // starts center screen
 //		this.setLayout(new GridLayout(10, 10));
@@ -105,21 +107,54 @@ public class JKTNTFrame extends JFrame {
 		login.addActionListener(clickListener);
 
 		mainScreen.setVisible(true);
-
-		
-		
-		// This anonymous GraphicsPanel should be replaced with an instance variable
 		this.add(mainScreen, BorderLayout.CENTER);
-		
-		g = new Game("Dead Island");
+	}
+
+	private void setupGames() {
 		// set up a panel inside the mainScreen panel to display games
 		gamePanel = new JKTNTPanel();
+		//JScrollPane scrollFrame = new JScrollPane(gamePanel);
 		gamePanel.setPreferredSize(mainScreen.getMaximumSize());
+		//scrollFrame.setPreferredSize(mainScreen.getMaximumSize());
 		gamePanel.setLayout(new FlowLayout());
 		mainScreen.add(gamePanel);
+		
+		
+		g = new Game("Dead Island","deadIsland.png");
+		g.getButton().addActionListener(clickListener);
+
 		gamePanel.add(g);
+
+
 		// this.getContentPane().add(g);
+		// repaint();
+
+	}
+	
+	private void setupGames(String name) {
+		// set up a panel inside the mainScreen panel to display games, separate the search bar, etc.
+		
+		gamePanel = new JKTNTPanel(); 
+		//JScrollPane scrollFrame = new JScrollPane(gamePanel);
+		gamePanel.setPreferredSize(mainScreen.getMaximumSize());
+		//scrollFrame.setPreferredSize(mainScreen.getMaximumSize());
+		gamePanel.setLayout(new FlowLayout());
+		mainScreen.add(gamePanel);
+		
+		
+		this.getContentPane().remove(g);
+		this.getContentPane().add(g);
+		
+		g = new Game("Xcom2","xcom2.png");
+		g.getButton().addActionListener(clickListener);
+		gamePanel.add(g);
+		JLabel l1 = new JLabel("asda");
+		gamePanel.add(l1);
+		System.out.println(name);
+		gamePanel.revalidate();
 		repaint();
+
+		
 	}
 
 	// Sets up the bottom panel with buttons
@@ -153,6 +188,14 @@ public class JKTNTFrame extends JFrame {
 			} else if (btn == login) {
 				// do nothing yet
 				mainScreen.setBackground(new Color(0, 0, 0));
+			} else if (btn == g.getButton()) {
+				
+				// react based on games clicked
+				//gamePanel.setBackground(new Color(0, 155, 0));
+				
+				//trying to get to a new page
+				setupGames(g.getName());
+
 			}
 		}
 
