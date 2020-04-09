@@ -14,6 +14,7 @@ public class JKTNTFrame extends JFrame {
 	private JButton clear;
 	private JButton login;
 	private JButton back;
+	private JButton menuBack;
 	private TextField text;
 	private TextField user;
 	private TextField pass;
@@ -48,7 +49,7 @@ public class JKTNTFrame extends JFrame {
 //		this.setLocationRelativeTo(null); // starts center screen
 //		this.setLayout(new GridLayout(10, 10));
 //		this.setVisible(true);
-
+		this.setResizable(false);
 		this.pack();
 		this.setVisible(true);
 	}
@@ -94,12 +95,6 @@ public class JKTNTFrame extends JFrame {
 		mainScreen.add(clear);
 		clear.addActionListener(clickListener);
 
-		// creates the username and password text fields
-		user = new TextField("", 20);
-		pass = new TextField("", 20);
-		mainScreen.add(user);
-		mainScreen.add(pass);
-
 		// creates a Login button with event listener attached
 		login = new JButton("Login");
 		mainScreen.add(login);
@@ -112,71 +107,123 @@ public class JKTNTFrame extends JFrame {
 	private void setupGames() {
 		// set up a panel inside the mainScreen panel to display games
 		gamePanel = new JKTNTPanel();
-		//JScrollPane scrollFrame = new JScrollPane(gamePanel);
+		// JScrollPane scrollFrame = new JScrollPane(gamePanel);
 		gamePanel.setPreferredSize(mainScreen.getMaximumSize());
-		//scrollFrame.setPreferredSize(mainScreen.getMaximumSize());
+		// scrollFrame.setPreferredSize(mainScreen.getMaximumSize());
 		gamePanel.setLayout(new FlowLayout());
 		mainScreen.add(gamePanel);
 		g = new Game[10];
-		
-		g[0] = new Game("Dead Island","deadIsland.png",19.99);
+
+//		for(int i = 4; i < g.length; i++) {
+//			g[i] = new Game("Dead Island","deadIsland.png",19.99);
+//			g[i].getButton().addActionListener(clickListener);
+//			gamePanel.add(g[i]);
+//		}
+		g[0] = new Game("Dead Island", "deadIsland.png", 19.99);
 		g[0].getButton().addActionListener(clickListener);
-		g[1] = new Game("Xcom2","xcom2.png", 29.99);
+		g[1] = new Game("Xcom2", "xcom2.png", 29.99);
 		g[1].getButton().addActionListener(clickListener);
-		g[2] = new Game("Tomb Rider","tombRaider.jpg",19.99);
+		g[2] = new Game("Tomb Rider", "tombRaider.jpg", 19.99);
 		g[2].getButton().addActionListener(clickListener);
-		
+		g[3] = new Game("Dead Island", "deadIsland.png", 19.99);
+		g[3].getButton().addActionListener(clickListener);
 		gamePanel.add(g[0]);
 		gamePanel.add(g[1]);
 		gamePanel.add(g[2]);
+		// gamePanel.add(g[3]);
 
-
-		// this.getContentPane().add(g);
-		// repaint();
-
+		gamePanel.revalidate();
+		gamePanel.repaint();
 	}
-	
-	
-	//testing for changing panels
+
+	// testing for changing panels
 	private void displayDetailedPage(Game g) {
-		// set up a panel inside the mainScreen panel to display games, separate the search bar, etc.
-		
-//		gamePanel = new JKTNTPanel(); 
-//		//JScrollPane scrollFrame = new JScrollPane(gamePanel);
-//		gamePanel.setPreferredSize(mainScreen.getMaximumSize());
-//		//scrollFrame.setPreferredSize(mainScreen.getMaximumSize());
-//		gamePanel.setLayout(new FlowLayout());
-//		mainScreen.add(gamePanel);
-		
 		gamePanel.removeAll();
-		System.out.println(g.getName());
 		gamePanel.add(g);
-		
+
+		// display a description of the game
+		JTextArea description = new JTextArea();
+		description.setSize(500, 500);
+		// temporary text for 1 game
+		description.setText(
+				"XCOM 2 is a 2016 turn-based tactics video game that was developed by Firaxis Games and published by 2K Games. It is the sequel to 2012's reboot of the series XCOM: Enemy Unknown; it takes place 20 years after the events of Enemy Unknown. XCOM, a military organization trying to fight off an alien invasion, has lost the war and is now a resistance force against the occupation of Earth and the established totalitarian regime and military dictatorship. Gameplay is split between turn-based combat in which players command a squad of soldiers to fight enemies and strategy elements. Players manage and control the operations of the Avenger, a derelict alien ship that is a mobile base for XCOM, commanding the engineering and research department of the base between missions. ");
+		description.setFont(new Font("TimesRoman", Font.PLAIN, 18));
+
+		description.setEditable(false);
+		description.setLineWrap(true);
+		description.setWrapStyleWord(true);
+
+		// make the text area scrollable
+		JScrollPane scroll = new JScrollPane(description);
+		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		scroll.setPreferredSize(new Dimension(500, 500));
+
+		gamePanel.add(scroll);
+
+		// create a back button to go back to home page
 		back = new JButton("Back");
 		gamePanel.add(back);
 		back.addActionListener(clickListener);
 
-//		JLabel l1 = new JLabel("asda");
-//		gamePanel.add(l1);
-//		System.out.println(name);
 		gamePanel.revalidate();
 		gamePanel.repaint();
 
-		
 	}
-	
-	//goes back to the main game library page, with preloaded games
+
+	private void login() {
+		mainScreen.removeAll();
+
+		// creates the username and password text fields
+		JLabel uname = new JLabel("Username");
+		JLabel psw = new JLabel("Password");
+		user = new TextField("", 20);
+		pass = new TextField("", 20);
+
+		mainScreen.add(uname);
+		mainScreen.add(user);
+		mainScreen.add(psw);
+		mainScreen.add(pass);
+
+		// creates a Login button with event listener attached
+		login = new JButton("Login");
+		mainScreen.add(login);
+		login.addActionListener(clickListener);
+
+		menuBack = new JButton("Back");
+		menuBack.addActionListener(clickListener);
+		mainScreen.add(menuBack);
+		mainScreen.setVisible(true);
+		// this.add(mainScreen, BorderLayout.CENTER);
+
+		setupGames();
+	}
+
+	// goes back to the main game library page, with preloaded games
 	private void back() {
 		gamePanel.removeAll();
-		
-		//Temporary games showing on the main page
+
+		// Temporary games showing on the main page
 		gamePanel.add(g[0]);
 		gamePanel.add(g[1]);
 		gamePanel.add(g[2]);
-		
-		//redraw the panel
+		// gamePanel.add(g[3]);
+		// redraw the panel
 		gamePanel.revalidate();
 		gamePanel.repaint();
+	}
+
+	private void menuBack() {
+		mainScreen.removeAll();
+
+		// creates a empty 20px wide textField
+		mainScreen.add(text);
+		// creates a Search button with event listener attached
+		mainScreen.add(search);
+		// creates a button to clear the search bar
+		mainScreen.add(clear);
+		// creates a Login button with event listener attached
+		mainScreen.add(login);
+		setupGames();
 	}
 
 	// Sets up the bottom panel with buttons
@@ -210,29 +257,30 @@ public class JKTNTFrame extends JFrame {
 
 			} else if (btn == login) {
 				// do nothing yet, need diagram
-				mainScreen.setBackground(new Color(255, 255, 255));
-			} else if(btn == clear){
+				login();
+			} else if (btn == clear) {
+
 				// do nothing yet, need diagram
-				mainScreen.setBackground(new Color(0, 0, 0));
-			} else if(btn == back){
+				mainScreen.setBackground(new Color(255, 255, 255));
+			} else if (btn == menuBack) {
+				menuBack();
+			} else if (btn == back) {
 				back();
-			}
-			else {
+			} else {
 				// for all the other buttons that are beleng to games
-				//gamePanel.setBackground(new Color((int)(Math.random()*255), 155, 0));
-				
-				//react based on the game clicked
-				for(int i = 0; i < g.length; i++) {
-					if(g[i] == null) {
+				// gamePanel.setBackground(new Color((int)(Math.random()*255), 155, 0));
+
+				// react based on the game clicked
+				for (int i = 0; i < g.length; i++) {
+					if (g[i] == null) {
 						break;
 					}
-					if(btn.equals(g[i].getButton())) {
+					if (btn.equals(g[i].getButton())) {
 						displayDetailedPage(g[i]);
 					}
 				}
-				
-				//trying to get to a new page
-				
+
+				// trying to get to a new page
 
 			}
 		}
