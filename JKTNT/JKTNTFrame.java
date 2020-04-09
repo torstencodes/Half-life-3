@@ -8,18 +8,17 @@ import javax.swing.*;
 public class JKTNTFrame extends JFrame {
 
 	private JLabel label;
-	private JKTNTFrame frame;
 	private JKTNTPanel mainScreen;
 	private JKTNTPanel gamePanel;
 	private JButton search;
 	private JButton clear;
 	private JButton login;
+	private JButton back;
 	private TextField text;
 	private TextField user;
 	private TextField pass;
 	private btnListener clickListener;
-	private Game g;
-	private Game g2;
+	private Game[] g;
 
 	public static void main(String[] args) {
 		new JKTNTFrame();
@@ -118,12 +117,18 @@ public class JKTNTFrame extends JFrame {
 		//scrollFrame.setPreferredSize(mainScreen.getMaximumSize());
 		gamePanel.setLayout(new FlowLayout());
 		mainScreen.add(gamePanel);
+		g = new Game[10];
 		
+		g[0] = new Game("Dead Island","deadIsland.png",19.99);
+		g[0].getButton().addActionListener(clickListener);
+		g[1] = new Game("Xcom2","xcom2.png", 29.99);
+		g[1].getButton().addActionListener(clickListener);
+		g[2] = new Game("Tomb Rider","tombRaider.jpg",19.99);
+		g[2].getButton().addActionListener(clickListener);
 		
-		g = new Game("Dead Island","deadIsland.png");
-		g.getButton().addActionListener(clickListener);
-
-		gamePanel.add(g);
+		gamePanel.add(g[0]);
+		gamePanel.add(g[1]);
+		gamePanel.add(g[2]);
 
 
 		// this.getContentPane().add(g);
@@ -131,30 +136,47 @@ public class JKTNTFrame extends JFrame {
 
 	}
 	
-	private void setupGames(String name) {
+	
+	//testing for changing panels
+	private void displayDetailedPage(Game g) {
 		// set up a panel inside the mainScreen panel to display games, separate the search bar, etc.
 		
-		gamePanel = new JKTNTPanel(); 
-		//JScrollPane scrollFrame = new JScrollPane(gamePanel);
-		gamePanel.setPreferredSize(mainScreen.getMaximumSize());
-		//scrollFrame.setPreferredSize(mainScreen.getMaximumSize());
-		gamePanel.setLayout(new FlowLayout());
-		mainScreen.add(gamePanel);
+//		gamePanel = new JKTNTPanel(); 
+//		//JScrollPane scrollFrame = new JScrollPane(gamePanel);
+//		gamePanel.setPreferredSize(mainScreen.getMaximumSize());
+//		//scrollFrame.setPreferredSize(mainScreen.getMaximumSize());
+//		gamePanel.setLayout(new FlowLayout());
+//		mainScreen.add(gamePanel);
 		
-		
-		this.getContentPane().remove(g);
-		this.getContentPane().add(g);
-		
-		g = new Game("Xcom2","xcom2.png");
-		g.getButton().addActionListener(clickListener);
+		gamePanel.removeAll();
+		System.out.println(g.getName());
 		gamePanel.add(g);
-		JLabel l1 = new JLabel("asda");
-		gamePanel.add(l1);
-		System.out.println(name);
+		
+		back = new JButton("Back");
+		gamePanel.add(back);
+		back.addActionListener(clickListener);
+
+//		JLabel l1 = new JLabel("asda");
+//		gamePanel.add(l1);
+//		System.out.println(name);
 		gamePanel.revalidate();
-		repaint();
+		gamePanel.repaint();
 
 		
+	}
+	
+	//goes back to the main game library page, with preloaded games
+	private void back() {
+		gamePanel.removeAll();
+		
+		//Temporary games showing on the main page
+		gamePanel.add(g[0]);
+		gamePanel.add(g[1]);
+		gamePanel.add(g[2]);
+		
+		//redraw the panel
+		gamePanel.revalidate();
+		gamePanel.repaint();
 	}
 
 	// Sets up the bottom panel with buttons
@@ -182,19 +204,35 @@ public class JKTNTFrame extends JFrame {
 			Object btn = e.getSource();
 
 			if (btn == search) {
+				// do nothing yet, need diagram
 				// search for the keyword typed in the textField
 				mainScreen.searchGames(text.getText());
 
 			} else if (btn == login) {
-				// do nothing yet
+				// do nothing yet, need diagram
+				mainScreen.setBackground(new Color(255, 255, 255));
+			} else if(btn == clear){
+				// do nothing yet, need diagram
 				mainScreen.setBackground(new Color(0, 0, 0));
-			} else if (btn == g.getButton()) {
+			} else if(btn == back){
+				back();
+			}
+			else {
+				// for all the other buttons that are beleng to games
+				//gamePanel.setBackground(new Color((int)(Math.random()*255), 155, 0));
 				
-				// react based on games clicked
-				//gamePanel.setBackground(new Color(0, 155, 0));
+				//react based on the game clicked
+				for(int i = 0; i < g.length; i++) {
+					if(g[i] == null) {
+						break;
+					}
+					if(btn.equals(g[i].getButton())) {
+						displayDetailedPage(g[i]);
+					}
+				}
 				
 				//trying to get to a new page
-				setupGames(g.getName());
+				
 
 			}
 		}

@@ -18,7 +18,14 @@ public class Game extends JPanel {
 	private Image image;
 	private JButton btn;
 	private String name;
+	private double price;
 	
+
+	/**
+	 * Creates a Game object as a panel, for users in the future
+	 * @param name Name of the game, for display and other use
+	 * @param path Path to the picture of the game
+	 */
 	public Game(String name, String path) {
 		super();
 		this.name = name;
@@ -34,6 +41,30 @@ public class Game extends JPanel {
 		this.add(btn,BorderLayout.SOUTH);
 	}
 	
+	/**
+	 * Creates a Game object as a panel
+	 * @param name Name of the game, for display and other use
+	 * @param path Path to the picture of the game
+	 * @param price Price of the game, the administrator can add price
+	 */
+	public Game(String name, String path, double price) {
+		super();
+		this.name = name;
+		this.price = price;
+		this.setPreferredSize(new Dimension(250,320));
+		this.setLayout(new BorderLayout());
+		
+		btn = new JButton(name + "      $" + price);
+		btn.setPreferredSize(new Dimension(250, 20));
+		
+		image = new ImageIcon(path).getImage();
+		//Image newImg = image.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH);
+	    //btn.setIcon(new ImageIcon(image));
+		this.add(btn,BorderLayout.SOUTH);
+	}
+	
+	
+	
 	@Override // This method already exists in JButton
 	public void paintComponent(Graphics g) {
 	    super.paintComponent(g); //Tells the JButton to do its own drawing
@@ -45,10 +76,14 @@ public class Game extends JPanel {
 		
 	}
 	
+	
 	public JButton getButton() {
 		return btn;
 	}
 	public String getName() {
 		return name;
+	}
+	public double getPrice() {
+		return price;
 	}
 }
