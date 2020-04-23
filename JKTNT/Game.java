@@ -71,11 +71,8 @@ public class Game extends JPanel {
 
 		// Starting here, draw our graphics
 		// All graphics get drawn by starting with g.
-		g.drawImage(image, 0, 0, 250,300, this);
-		
-		
+		g.drawImage(image, 0, 0, 250,300, this);	
 	}
-	
 	
 	public JButton getButton() {
 		return btn;

@@ -1,6 +1,8 @@
 import java.awt.*;
+
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import javax.swing.*;
 
@@ -12,23 +14,38 @@ public class JKTNTFrame extends JFrame {
 	private JKTNTPanel gamePanel;
 	private JButton search;
 	private JButton clear;
-	private JButton login;
+	private JButton loginCheck;
+	private JButton loginSet;
+	private JButton registerSet;
+	private JButton registerCheck;
 	private JButton back;
 	private JButton menuBack;
-	private TextField text;
+	private TextField userR;
+	private TextField passR;
 	private TextField user;
 	private TextField pass;
+	private TextField searchQuery;
 	private btnListener clickListener;
 	private Game[] g;
+	private User u;
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InstantiationException, IllegalAccessException,
+			UnsupportedLookAndFeelException, ClassNotFoundException {
+		// gets the sleek look
+		for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+			if ("Nimbus".equals(info.getName())) {
+				UIManager.setLookAndFeel(info.getClassName());
+				break;
+			}
+		}
 		new JKTNTFrame();
+
 	}
 
-	public JKTNTFrame() {
+	public JKTNTFrame() throws ClassNotFoundException, InstantiationException, IllegalAccessException,
+			UnsupportedLookAndFeelException {
 		// creates the window
 		super("JKTNT Window");
-
 		// Line of code to set the size and location
 
 		this.setSize(new Dimension(800, 800));
@@ -52,6 +69,8 @@ public class JKTNTFrame extends JFrame {
 		this.setResizable(false);
 		this.pack();
 		this.setVisible(true);
+		// Initiate the user object. 
+		u = new User("");
 	}
 
 	// Sets up the top panel where some graphics-related buttons
@@ -81,26 +100,30 @@ public class JKTNTFrame extends JFrame {
 		mainScreen = new JKTNTPanel();
 		mainScreen.setLayout(new FlowLayout());
 
-		// creates a empty 20px wide textField
-		text = new TextField("", 20);
-		mainScreen.add(text);
-
 		// creates a Search button with event listener attached
 		search = new JButton("Search");
+		searchQuery = new TextField("", 30);
 		mainScreen.add(search);
+		mainScreen.add(searchQuery);
 		search.addActionListener(clickListener);
 
 		// creates a button to clear the search bar
 		clear = new JButton("Clear");
 		mainScreen.add(clear);
 		clear.addActionListener(clickListener);
-
-		// creates a Login button with event listener attached
-		login = new JButton("Login");
-		mainScreen.add(login);
-		login.addActionListener(clickListener);
+		
+	    // creates a Login button with event listener attached
+        loginSet = new JButton("Login");
+        mainScreen.add(loginSet);
+        loginSet.addActionListener(clickListener);
+		
+		// Create a register button with event listener
+		registerSet = new JButton("register");
+		mainScreen.add(registerSet);
+		registerSet.addActionListener(clickListener);
 
 		mainScreen.setVisible(true);
+		
 		this.add(mainScreen, BorderLayout.CENTER);
 	}
 
@@ -112,7 +135,7 @@ public class JKTNTFrame extends JFrame {
 		// scrollFrame.setPreferredSize(mainScreen.getMaximumSize());
 		gamePanel.setLayout(new FlowLayout());
 		mainScreen.add(gamePanel);
-		g = new Game[10];
+		g = new Game[3];
 
 //		for(int i = 4; i < g.length; i++) {
 //			g[i] = new Game("Dead Island","deadIsland.png",19.99);
@@ -125,8 +148,6 @@ public class JKTNTFrame extends JFrame {
 		g[1].getButton().addActionListener(clickListener);
 		g[2] = new Game("Tomb Rider", "tombRaider.jpg", 19.99);
 		g[2].getButton().addActionListener(clickListener);
-		g[3] = new Game("Dead Island", "deadIsland.png", 19.99);
-		g[3].getButton().addActionListener(clickListener);
 		gamePanel.add(g[0]);
 		gamePanel.add(g[1]);
 		gamePanel.add(g[2]);
@@ -169,33 +190,112 @@ public class JKTNTFrame extends JFrame {
 		gamePanel.repaint();
 
 	}
+	/*
+	 * I think there is a way we could combine the user name and password instance 
+	 * variables with the ones that are used in the login method. Not sure how tho.
+	 */
+	private void registerUser() {
+	    mainScreen.removeAll();
+	    
+	    JLabel uname = new JLabel("Enter Username");
+	    JLabel pwd = new JLabel("Enter Password");
+	    userR = new TextField("", 20);
+	    passR = new TextField("", 20);
+	    mainScreen.add(uname);
+	    mainScreen.add(userR);
+	    mainScreen.add(pwd);
+	    mainScreen.add(passR);
+	    
+	    registerCheck = new JButton("Register");
+	    mainScreen.add(registerCheck);
+	    registerCheck.addActionListener(clickListener);
+	    
+	    menuBack = new JButton("Back");
+	    menuBack.addActionListener(clickListener);
+	    mainScreen.add(menuBack);
+	    mainScreen.setVisible(true);
+	    
+	    setupGames();
+	}
 
+	/*
+	 * This method simply displays the login screen and allows the user 
+	 * to login to their account.
+	 * 
+	 * Needs to handle the case where user enters in a too long pass or user name
+	 */
 	private void login() {
 		mainScreen.removeAll();
-
+        user = new TextField("", 20);
+        pass = new TextField("", 20);
 		// creates the username and password text fields
 		JLabel uname = new JLabel("Username");
 		JLabel psw = new JLabel("Password");
-		user = new TextField("", 20);
-		pass = new TextField("", 20);
-
 		mainScreen.add(uname);
 		mainScreen.add(user);
 		mainScreen.add(psw);
 		mainScreen.add(pass);
 
 		// creates a Login button with event listener attached
-		login = new JButton("Login");
-		mainScreen.add(login);
-		login.addActionListener(clickListener);
+		loginCheck = new JButton("Login");
+		mainScreen.add(loginCheck);
+		loginCheck.addActionListener(clickListener);
 
 		menuBack = new JButton("Back");
 		menuBack.addActionListener(clickListener);
 		mainScreen.add(menuBack);
 		mainScreen.setVisible(true);
-		// this.add(mainScreen, BorderLayout.CENTER);
-
 		setupGames();
+	}
+	/*
+	 * This checks if the user successfully logged in, we should use regex to check validity of the string.
+	 */
+	private void checkLogin() {
+	    String userN = user.getText();
+	    String passW = pass.getText();
+	    if (userN.isEmpty() || passW.isEmpty()) {   
+	        JOptionPane.showMessageDialog(mainScreen, "Please enter in valid user/pass!");
+	    } else {
+	        if (u.loginUser(userN, passW)) {
+                JOptionPane.showMessageDialog(mainScreen, "Successfully Logged In!");
+	        } else {
+                JOptionPane.showMessageDialog(mainScreen, "User name does not exist!");	            
+	        }
+	    }
+	}
+	/*
+     * This checks if the registration is good and then lets the user know if registration was successful.
+     */
+	private void checkReg() {
+	    String userN = userR.getText();
+	    String passW = passR.getText();
+	    // Can add more checking here if we want to define a password by a regex expression.
+	    if (userN.isEmpty() || passW.isEmpty()) {
+	        JOptionPane.showMessageDialog(mainScreen, "Please enter in valid user/pass!");
+	    } else {
+	        if (u.registerUser(userN,passW)) {
+	            JOptionPane.showMessageDialog(mainScreen, "Successfully Registered!");
+	        } else {
+	            JOptionPane.showMessageDialog(mainScreen, "User name already taken!");
+	        }
+	    }
+	    
+	}
+	
+	private void searchGames() {
+	    String query = searchQuery.getText();
+	    if (query.isEmpty()) {
+	        JOptionPane.showMessageDialog(mainScreen, "Please enter in valid user/pass!");
+	    } else {
+	        gamePanel.removeAll();
+	        filter sort = new filter(g);
+	        ArrayList<Game> gameList = sort.search(query);
+	        for (int i = 0; i < gameList.size(); i++) {
+	            gamePanel.add(gameList.get(i));
+	        }
+	        gamePanel.revalidate();
+	        gamePanel.repaint();
+	    }
 	}
 
 	// goes back to the main game library page, with preloaded games
@@ -216,13 +316,15 @@ public class JKTNTFrame extends JFrame {
 		mainScreen.removeAll();
 
 		// creates a empty 20px wide textField
-		mainScreen.add(text);
+		mainScreen.add(searchQuery);
 		// creates a Search button with event listener attached
 		mainScreen.add(search);
 		// creates a button to clear the search bar
 		mainScreen.add(clear);
 		// creates a Login button with event listener attached
-		mainScreen.add(login);
+		mainScreen.add(loginSet);
+		
+		mainScreen.add(registerSet);
 		setupGames();
 	}
 
@@ -251,21 +353,22 @@ public class JKTNTFrame extends JFrame {
 			Object btn = e.getSource();
 
 			if (btn == search) {
-				// do nothing yet, need diagram
-				// search for the keyword typed in the textField
-				mainScreen.searchGames(text.getText());
-
-			} else if (btn == login) {
-				// do nothing yet, need diagram
+				searchGames();
+			} else if (btn == registerSet) {
+			    registerUser();
+			} else if (btn == registerCheck) {
+			    checkReg();
+			} else if (btn == loginSet) {
 				login();
-			} else if (btn == clear) {
-
+		    } else if (btn == clear) {
 				// do nothing yet, need diagram
 				mainScreen.setBackground(new Color(255, 255, 255));
 			} else if (btn == menuBack) {
 				menuBack();
 			} else if (btn == back) {
 				back();
+			} else if (btn == loginCheck) {
+			    checkLogin();
 			} else {
 				// for all the other buttons that are beleng to games
 				// gamePanel.setBackground(new Color((int)(Math.random()*255), 155, 0));
