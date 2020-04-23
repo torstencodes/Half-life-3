@@ -279,9 +279,10 @@ public class JKTNTFrame extends JFrame {
 	            JOptionPane.showMessageDialog(mainScreen, "User name already taken!");
 	        }
 	    }
-	    
 	}
-	
+	/*
+	 * Searches games and filters the games to display by the query
+	 */
 	private void searchGames() {
 	    String query = searchQuery.getText();
 	    if (query.isEmpty()) {
@@ -339,19 +340,11 @@ public class JKTNTFrame extends JFrame {
 		// Now that the panel is set up, add it to the frame
 		this.add(bottom, BorderLayout.SOUTH);
 	}
-
-//	private String search() {
-//		System.out.println("lol");
-//		return "";
-//	}
-
 	// button listener for Search, Login, etc.
 	public class btnListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-
 			Object btn = e.getSource();
-
 			if (btn == search) {
 				searchGames();
 			} else if (btn == registerSet) {
@@ -370,9 +363,6 @@ public class JKTNTFrame extends JFrame {
 			} else if (btn == loginCheck) {
 			    checkLogin();
 			} else {
-				// for all the other buttons that are beleng to games
-				// gamePanel.setBackground(new Color((int)(Math.random()*255), 155, 0));
-
 				// react based on the game clicked
 				for (int i = 0; i < g.length; i++) {
 					if (g[i] == null) {
@@ -382,9 +372,7 @@ public class JKTNTFrame extends JFrame {
 						displayDetailedPage(g[i]);
 					}
 				}
-
 				// trying to get to a new page
-
 			}
 		}
 
