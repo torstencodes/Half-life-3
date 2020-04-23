@@ -249,13 +249,17 @@ public class JKTNTFrame extends JFrame {
 	}
 	/*
 	 * This checks if the user successfully logged in, we should use regex to check validity of the string.
+	 * 
+	 * Need option to log a user out
 	 */
 	private void checkLogin() {
 	    String userN = user.getText();
 	    String passW = pass.getText();
 	    if (userN.isEmpty() || passW.isEmpty()) {   
 	        JOptionPane.showMessageDialog(mainScreen, "Please enter in valid user/pass!");
-	    } else {
+	    } else if (!u.getUserName().isEmpty()) {
+	        JOptionPane.showMessageDialog(mainScreen, "User already logged in!");
+	    } else{
 	        if (u.loginUser(userN, passW)) {
                 JOptionPane.showMessageDialog(mainScreen, "Successfully Logged In!");
 	        } else {

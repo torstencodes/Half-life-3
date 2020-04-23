@@ -63,9 +63,9 @@ public class filter {
      */
     public ArrayList<Game> search(final String query) {
         ArrayList<Game> gameList = new ArrayList<Game>();
-        CharSequence csq = query;
+        CharSequence csq = query.toLowerCase();
         for (int i = 0; i < games.length - 1; i++) {
-            if (games[i].getName().contains(csq)) {
+            if (games[i].getName().toLowerCase().contains(csq)) {
                 gameList.add(games[i]);
             }
         }

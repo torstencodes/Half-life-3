@@ -23,14 +23,4 @@ public class JKTNTPanel extends JPanel {
 		
 		System.out.println("lol");
 	};
-	
-	public void searchGames(String name) {
-		
-		//this.add(new TextField("Label"));
-		if(name.equals("asd")) {
-			System.out.println("found");
-			this.setBackground(new Color(255,0,0));
-		}
-		System.out.println("lol");
-	};
 }
