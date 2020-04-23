@@ -49,10 +49,36 @@ public class filter {
         
         return gameList;
     }
-    public ArrayList<Game> alphaOrder() {
+    /*
+     * Returns array list of games in alphabetical order
+     */
+    public ArrayList<Game> atoZ() {
         ArrayList<Game> gameList = new ArrayList<Game>(Arrays.asList(games));
+        Game dummy = null;
+        for (int i = 0; i < gameList.size(); i++) {
+            for (int j = i + 1; j < gameList.size(); j++) {
+                if (gameList.get(i).getName().compareTo(gameList.get(j).getName()) > 0) {
+                    dummy = gameList.get(i);
+                    gameList.set(i, gameList.get(j));
+                    gameList.set(j, dummy);
+                }
+            }
+        }
         
-        
+        return gameList;
+    }
+    public ArrayList<Game> ztoA() {
+        ArrayList<Game> gameList = new ArrayList<Game>(Arrays.asList(games));
+        Game dummy = null;
+        for (int i = 0; i < gameList.size(); i++) {
+            for (int j = i + 1; j < gameList.size(); j++) {
+                if (gameList.get(i).getName().compareTo(gameList.get(j).getName()) < 0) {
+                    dummy = gameList.get(i);
+                    gameList.set(i, gameList.get(j));
+                    gameList.set(j, dummy);
+                }
+            }
+        }
         return gameList;
     }
     public ArrayList<Game> sortCategory() {

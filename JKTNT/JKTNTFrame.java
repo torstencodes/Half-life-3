@@ -24,6 +24,8 @@ public class JKTNTFrame extends JFrame {
 	private JButton menuBackBtn;
 	private JButton hiToLo;
 	private JButton loToHi;
+	private JButton atoZ;
+	private JButton ztoA;
 	private TextField userR;
 	private TextField passR;
 	private TextField user;
@@ -116,6 +118,14 @@ public class JKTNTFrame extends JFrame {
         mainScreen = new JKTNTPanel();
         mainScreen.setLayout(new FlowLayout());
         mainScreen.setPreferredSize(new Dimension(1000, 100));
+        
+        atoZ = new JButton("A->Z");
+        mainScreen.add(atoZ);
+        atoZ.addActionListener(clickListener);
+        
+        ztoA = new JButton("Z->A");
+        mainScreen.add(ztoA);
+        ztoA.addActionListener(clickListener);
 
         hiToLo = new JButton("High->Low");
         mainScreen.add(hiToLo);
@@ -329,6 +339,9 @@ public class JKTNTFrame extends JFrame {
 	        }
 	    }
 	}
+	/*
+	 * Logs out the user and displays respective message. 
+	 */
 	private void logoutMsg() {
 	    boolean goodLogOut = u.logout();
 	    if (goodLogOut) {
@@ -358,7 +371,8 @@ public class JKTNTFrame extends JFrame {
 	    }
 	}
 	/*
-	 * Will filter the game list by high to low price or low to high price. 
+	 * Will filter the game list by high to low price or low to high price.
+	 * Or it will 
 	 */
 	private void filterPrice(Object btn) {
 	    gamePanel.removeAll();
@@ -366,8 +380,12 @@ public class JKTNTFrame extends JFrame {
 	    ArrayList<Game> gameList;
 	    if (btn == hiToLo) {
 	        gameList = sort.priceHitoLo();
-	    } else {
+	    } else if (btn == loToHi){
 	        gameList = sort.priceLotoHi();
+	    } else if (btn == atoZ) {
+	        gameList = sort.atoZ();
+	    } else {
+	        gameList = sort.ztoA();
 	    }
 	    loadGames(gameList);
 	}
@@ -395,7 +413,11 @@ public class JKTNTFrame extends JFrame {
 
 	private void menuBack() {
 		mainScreen.removeAll();
-	      
+	    
+		mainScreen.add(atoZ);
+		
+		mainScreen.add(ztoA);
+		
         mainScreen.add(hiToLo);
         
         mainScreen.add(loToHi);
@@ -447,7 +469,7 @@ public class JKTNTFrame extends JFrame {
 				loadGames(g);
 			} else if (btn == loginCheck) {
 			    checkLogin();
-			} else if (btn == hiToLo || btn == loToHi) {
+			} else if (btn == hiToLo || btn == loToHi || btn == atoZ || btn == ztoA) {
 			    filterPrice(btn);
 			} else if (btn == logoutBtn) {
 			    logoutMsg();
