@@ -12,11 +12,11 @@ public class filter {
     /*
      * Using bubble sort to sort games based on price going from high to low
      */
-    public ArrayList<Game> priceHitoLo() {
+    public ArrayList<Game> priceLotoHi() {
         Game dummy = null;
-        ArrayList<Game> gameList = new ArrayList<Game>();
-        for (int i = 0; i < games.length; i++) {
-            for (int j = 1; j < (games.length - 1); j++) {
+        ArrayList<Game> gameList = new ArrayList<Game>(Arrays.asList(games));
+        for (int i = 0; i < gameList.size(); i++) {
+            for (int j = 1; j < (gameList.size()); j++) {
                 if (gameList.get(j - 1).getPrice() > gameList.get(j).getPrice()) {
                     dummy = gameList.get(j - 1);
                     gameList.set(j - 1, gameList.get(j));
@@ -30,13 +30,17 @@ public class filter {
      * Calls the priceHitoLo to sort the array from highest to lowest and then
      * just reverses that array. 
      */
-    public ArrayList<Game> priceLotoHi() {
-        ArrayList<Game> gameList = priceHitoLo();
+    public ArrayList<Game> priceHitoLo() {
+        ArrayList<Game> gameList = new ArrayList<Game>(Arrays.asList(games));
         Game dummy = null;
         for (int i = 0; i < gameList.size(); i++) {
-            dummy = gameList.get(i);
-            gameList.set(i, gameList.get(gameList.size() - i - 1));
-            gameList.set(gameList.size() - i - 1, dummy);
+            for (int j = 1; j < (gameList.size()); j++) {
+                if (gameList.get(j - 1).getPrice() < gameList.get(j).getPrice()) {
+                    dummy = gameList.get(j - 1);
+                    gameList.set(j - 1, gameList.get(j));
+                    gameList.set(j, dummy);
+                }
+            }
         }
         return gameList;
     } 
@@ -64,7 +68,7 @@ public class filter {
     public ArrayList<Game> search(final String query) {
         ArrayList<Game> gameList = new ArrayList<Game>();
         CharSequence csq = query.toLowerCase();
-        for (int i = 0; i < games.length - 1; i++) {
+        for (int i = 0; i < games.length; i++) {
             if (games[i].getName().toLowerCase().contains(csq)) {
                 gameList.add(games[i]);
             }

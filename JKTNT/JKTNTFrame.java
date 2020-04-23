@@ -12,14 +12,18 @@ public class JKTNTFrame extends JFrame {
 	private JLabel label;
 	private JKTNTPanel mainScreen;
 	private JKTNTPanel gamePanel;
+	private JPanel bottom;
 	private JButton search;
 	private JButton clear;
 	private JButton loginCheck;
 	private JButton loginSet;
 	private JButton registerSet;
 	private JButton registerCheck;
+	private JButton logoutBtn;
 	private JButton back;
-	private JButton menuBack;
+	private JButton menuBackBtn;
+	private JButton hiToLo;
+	private JButton loToHi;
 	private TextField userR;
 	private TextField passR;
 	private TextField user;
@@ -55,106 +59,138 @@ public class JKTNTFrame extends JFrame {
 		// this.setResizable(false);
 		// Line of code that says what happens when you click close
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+	    u = new User("");
+	    label = new JLabel("Welcome to JKTNT!");
+	    bottom = new JPanel();
 		// j.setBounds(500, 300, 800, 800);
 		// Call helper methods to set up various sections
-		setupTopPanel();
-		setupMiddlePanel();
 		setupBottomPanel();
+		setupMiddlePanel();
+		// setupBottomPanel();
 		setupGames();
 
 //		this.setLocationRelativeTo(null); // starts center screen
 //		this.setLayout(new GridLayout(10, 10));
 //		this.setVisible(true);
-		this.setResizable(false);
+//		this.setResizable(false);
 		this.pack();
 		this.setVisible(true);
 		// Initiate the user object. 
-		u = new User("");
 	}
 
 	// Sets up the top panel where some graphics-related buttons
 	// will go.
-	private void setupTopPanel() {
-		JPanel top = new JPanel();
-		top.setLayout(new FlowLayout());
-		// MyButtonListener buttonListener = new MyButtonListener();
+	private void setupBottomPanel() {
+	    bottom.removeAll();
+        bottom.setLayout(new FlowLayout());
+        // MyButtonListener buttonListener = new MyButtonListener();
+        if (u.getUserName().isEmpty()) {
+            label.setText("Welcome to JKTNT!");
+        } else {
+            if (u.isAdmin(u.getUserName())) {
+                label.setText(u.getUserName() + " is logged in and is an Admin!");
+            } else if (u.isMod(u.getUserName())) {
+                label.setText(u.getUserName() + " is logged in and is a Moderator!");
+            } else {
+                label.setText(u.getUserName() + " is logged in and is a User!");
+            }
+        }
 
-		label = new JLabel("Welcome to JKTNT!");
+        // top.add(login);
+        // loadData.addActionListener(buttonListener);
+        // saveData.addActionListener(buttonListener);
+        // clear.addActionListener(buttonListener);
 
-		// top.add(login);
-		// loadData.addActionListener(buttonListener);
-		// saveData.addActionListener(buttonListener);
-		// clear.addActionListener(buttonListener);
-
-		// These anonymous JButtons should be replaced with instance variables
-		top.add(label);
-		top.setVisible(true);
-		// Once the panel is set up, add it to the frame
-		this.add(top, BorderLayout.NORTH);
+        // These anonymous JButtons should be replaced with instance variables
+        bottom.add(label);
+        bottom.setVisible(true);
+        
+        bottom.revalidate();
+        bottom.repaint();
+        // Once the panel is set up, add it to the frame
+        this.add(bottom, BorderLayout.SOUTH);
 
 	}
-
-	// Sets up the middle panel where the graphics will go
+	
 	private void setupMiddlePanel() {
-		mainScreen = new JKTNTPanel();
-		mainScreen.setLayout(new FlowLayout());
+        mainScreen = new JKTNTPanel();
+        mainScreen.setLayout(new FlowLayout());
+        mainScreen.setPreferredSize(new Dimension(1000, 100));
 
-		// creates a Search button with event listener attached
-		search = new JButton("Search");
-		searchQuery = new TextField("", 30);
-		mainScreen.add(search);
-		mainScreen.add(searchQuery);
-		search.addActionListener(clickListener);
+        hiToLo = new JButton("High->Low");
+        mainScreen.add(hiToLo);
+        hiToLo.addActionListener(clickListener);
+        
+        loToHi = new JButton("Low->High");
+        mainScreen.add(loToHi);
+        loToHi.addActionListener(clickListener);
+        
+        // creates a Search button with event listener attached
+        search = new JButton("Search");
+        searchQuery = new TextField("", 30);
+        mainScreen.add(search);
+        mainScreen.add(searchQuery);
+        search.addActionListener(clickListener);
 
-		// creates a button to clear the search bar
-		clear = new JButton("Clear");
-		mainScreen.add(clear);
-		clear.addActionListener(clickListener);
-		
-	    // creates a Login button with event listener attached
+        // creates a button to clear the search bar
+        clear = new JButton("Clear");
+        mainScreen.add(clear);
+        clear.addActionListener(clickListener);
+        
+        // creates a Login button with event listener attached
         loginSet = new JButton("Login");
         mainScreen.add(loginSet);
         loginSet.addActionListener(clickListener);
-		
-		// Create a register button with event listener
-		registerSet = new JButton("register");
-		mainScreen.add(registerSet);
-		registerSet.addActionListener(clickListener);
+        
+        // Create a register button with event listener
+        registerSet = new JButton("register");
+        mainScreen.add(registerSet);
+        registerSet.addActionListener(clickListener);
 
-		mainScreen.setVisible(true);
-		
-		this.add(mainScreen, BorderLayout.CENTER);
+        mainScreen.setVisible(true);
+        
+        this.add(mainScreen, BorderLayout.NORTH);
 	}
 
+	// Sets up the middle panel where the graphics will go
+
+
 	private void setupGames() {
-		// set up a panel inside the mainScreen panel to display games
-		gamePanel = new JKTNTPanel();
-		// JScrollPane scrollFrame = new JScrollPane(gamePanel);
-		gamePanel.setPreferredSize(mainScreen.getMaximumSize());
-		// scrollFrame.setPreferredSize(mainScreen.getMaximumSize());
-		gamePanel.setLayout(new FlowLayout());
-		mainScreen.add(gamePanel);
-		g = new Game[3];
+        // set up a panel inside the mainScreen panel to display games
+        gamePanel = new JKTNTPanel();
+        // JScrollPane scrollFrame = new JScrollPane(gamePanel);
+        gamePanel.setPreferredSize(new Dimension(400, 1500));
+        // scrollFrame.setPreferredSize(mainScreen.getMaximumSize());
+
+        JScrollPane scroll = new JScrollPane(gamePanel);
+        scroll.getVerticalScrollBar().setPreferredSize(new Dimension(15, 0));
+        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        //scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scroll.setLayout(new ScrollPaneLayout());
+        scroll.setPreferredSize(new Dimension(1000, 800));
+
+        
+        
+        gamePanel.setLayout(new FlowLayout());
+        // mainScreen.setPreferredSize(mainScreen.getPreferredSize());
+        gamePanel.setVisible(true);
+        this.add(scroll, BorderLayout.CENTER);
+		g = new Game[4];
 
 //		for(int i = 4; i < g.length; i++) {
 //			g[i] = new Game("Dead Island","deadIsland.png",19.99);
 //			g[i].getButton().addActionListener(clickListener);
 //			gamePanel.add(g[i]);
 //		}
-		g[0] = new Game("Dead Island", "deadIsland.png", 19.99);
+		g[0] = new Game("Dead Island", "deadIsland.png", 14.99);
 		g[0].getButton().addActionListener(clickListener);
 		g[1] = new Game("Xcom2", "xcom2.png", 29.99);
 		g[1].getButton().addActionListener(clickListener);
 		g[2] = new Game("Tomb Rider", "tombRaider.jpg", 19.99);
 		g[2].getButton().addActionListener(clickListener);
-		gamePanel.add(g[0]);
-		gamePanel.add(g[1]);
-		gamePanel.add(g[2]);
-		// gamePanel.add(g[3]);
-
-		gamePanel.revalidate();
-		gamePanel.repaint();
+		g[3] = new Game("PlayerUnknown's: BattleGrounds", "pubg.jpg", 24.99);
+		g[3].getButton().addActionListener(clickListener);
+		loadGames(g);
 	}
 
 	// testing for changing panels
@@ -210,12 +246,15 @@ public class JKTNTFrame extends JFrame {
 	    mainScreen.add(registerCheck);
 	    registerCheck.addActionListener(clickListener);
 	    
-	    menuBack = new JButton("Back");
-	    menuBack.addActionListener(clickListener);
-	    mainScreen.add(menuBack);
+	    menuBackBtn = new JButton("Back");
+	    menuBackBtn.addActionListener(clickListener);
+	    mainScreen.add(menuBackBtn);
 	    mainScreen.setVisible(true);
 	    
-	    setupGames();
+	    mainScreen.revalidate();
+	    mainScreen.repaint();
+	    
+	    loadGames(g);
 	}
 
 	/*
@@ -241,11 +280,15 @@ public class JKTNTFrame extends JFrame {
 		mainScreen.add(loginCheck);
 		loginCheck.addActionListener(clickListener);
 
-		menuBack = new JButton("Back");
-		menuBack.addActionListener(clickListener);
-		mainScreen.add(menuBack);
+		menuBackBtn = new JButton("Back");
+		menuBackBtn.addActionListener(clickListener);
+		mainScreen.add(menuBackBtn);
 		mainScreen.setVisible(true);
-		setupGames();
+		
+		mainScreen.revalidate();
+        mainScreen.repaint();
+        
+		loadGames(g);
 	}
 	/*
 	 * This checks if the user successfully logged in, we should use regex to check validity of the string.
@@ -262,6 +305,7 @@ public class JKTNTFrame extends JFrame {
 	    } else{
 	        if (u.loginUser(userN, passW)) {
                 JOptionPane.showMessageDialog(mainScreen, "Successfully Logged In!");
+                setupBottomPanel();
 	        } else {
                 JOptionPane.showMessageDialog(mainScreen, "User name does not exist!");	            
 	        }
@@ -279,9 +323,20 @@ public class JKTNTFrame extends JFrame {
 	    } else {
 	        if (u.registerUser(userN,passW)) {
 	            JOptionPane.showMessageDialog(mainScreen, "Successfully Registered!");
+	            setupBottomPanel();
 	        } else {
 	            JOptionPane.showMessageDialog(mainScreen, "User name already taken!");
 	        }
+	    }
+	}
+	private void logoutMsg() {
+	    boolean goodLogOut = u.logout();
+	    if (goodLogOut) {
+	        setupBottomPanel();
+	        menuBack();
+	        JOptionPane.showMessageDialog(mainScreen, "Successful logout");
+	    } else {
+            JOptionPane.showMessageDialog(mainScreen, "Already logged out or something");
 	    }
 	}
 	/*
@@ -290,7 +345,7 @@ public class JKTNTFrame extends JFrame {
 	private void searchGames() {
 	    String query = searchQuery.getText();
 	    if (query.isEmpty()) {
-	        JOptionPane.showMessageDialog(mainScreen, "Please enter in valid user/pass!");
+	        JOptionPane.showMessageDialog(mainScreen, "Please enter in valid query!");
 	    } else {
 	        gamePanel.removeAll();
 	        filter sort = new filter(g);
@@ -302,48 +357,73 @@ public class JKTNTFrame extends JFrame {
 	        gamePanel.repaint();
 	    }
 	}
-
-	// goes back to the main game library page, with preloaded games
-	private void back() {
-		gamePanel.removeAll();
-
-		// Temporary games showing on the main page
-		gamePanel.add(g[0]);
-		gamePanel.add(g[1]);
-		gamePanel.add(g[2]);
-		// gamePanel.add(g[3]);
-		// redraw the panel
-		gamePanel.revalidate();
-		gamePanel.repaint();
+	/*
+	 * Will filter the game list by high to low price or low to high price. 
+	 */
+	private void filterPrice(Object btn) {
+	    gamePanel.removeAll();
+	    filter sort = new filter(g);
+	    ArrayList<Game> gameList;
+	    if (btn == hiToLo) {
+	        gameList = sort.priceHitoLo();
+	    } else {
+	        gameList = sort.priceLotoHi();
+	    }
+	    loadGames(gameList);
+	}
+	/*
+	 * Provided an array or an arrayList, this method will load all the games
+	 * from the given list to the screen.
+	 */
+	private void loadGames(ArrayList<Game> gameList) {
+	    gamePanel.removeAll();
+	    for (int i = 0; i < gameList.size(); i++) {
+	        gamePanel.add(gameList.get(i));
+	    }
+	    gamePanel.revalidate();
+	    gamePanel.repaint();
+	}
+	
+	private void loadGames(Game[] gameList) {
+	    gamePanel.removeAll();
+	    for (int i = 0; i < gameList.length; i++) {
+	        gamePanel.add(gameList[i]);
+	    }
+	    gamePanel.revalidate();
+	    gamePanel.repaint();
 	}
 
 	private void menuBack() {
 		mainScreen.removeAll();
-
+	      
+        mainScreen.add(hiToLo);
+        
+        mainScreen.add(loToHi);
+	    // creates a Search button with event listener attached
+        mainScreen.add(search);
 		// creates a empty 20px wide textField
 		mainScreen.add(searchQuery);
-		// creates a Search button with event listener attached
-		mainScreen.add(search);
 		// creates a button to clear the search bar
 		mainScreen.add(clear);
 		// creates a Login button with event listener attached
-		mainScreen.add(loginSet);
+		if (u.getUserName().isEmpty()) {
+		    mainScreen.add(loginSet);
+		        
+		    mainScreen.add(registerSet);
+		} else {
+		    logoutBtn = new JButton("Logout");
+		    mainScreen.add(logoutBtn);
+		    logoutBtn.addActionListener(clickListener);
+		}
 		
-		mainScreen.add(registerSet);
+		mainScreen.revalidate();
+        mainScreen.repaint();
+
 		setupGames();
 	}
 
 	// Sets up the bottom panel with buttons
-	private void setupBottomPanel() {
-		JPanel bottom = new JPanel();
-		bottom.setLayout(new FlowLayout());
 
-		// load the images
-		// add the game to the display
-
-		// Now that the panel is set up, add it to the frame
-		this.add(bottom, BorderLayout.SOUTH);
-	}
 	// button listener for Search, Login, etc.
 	public class btnListener implements ActionListener {
 		@Override
@@ -359,13 +439,18 @@ public class JKTNTFrame extends JFrame {
 				login();
 		    } else if (btn == clear) {
 				// do nothing yet, need diagram
-				mainScreen.setBackground(new Color(255, 255, 255));
-			} else if (btn == menuBack) {
+				loadGames(g);
+				searchQuery.setText("");
+			} else if (btn == menuBackBtn) {
 				menuBack();
 			} else if (btn == back) {
-				back();
+				loadGames(g);
 			} else if (btn == loginCheck) {
 			    checkLogin();
+			} else if (btn == hiToLo || btn == loToHi) {
+			    filterPrice(btn);
+			} else if (btn == logoutBtn) {
+			    logoutMsg();
 			} else {
 				// react based on the game clicked
 				for (int i = 0; i < g.length; i++) {

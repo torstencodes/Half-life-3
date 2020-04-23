@@ -58,7 +58,7 @@ public class User {
                 String user = data.substring(0, pos);
                 int pos2 = data.indexOf(",", pos + 1);
                 String pass = data.substring(pos + 1, pos2);
-                int role = Integer.parseInt(data.substring(pos2, data.length()));
+                int role = Integer.parseInt(data.substring(pos2 + 1, data.length()));
                 if (!user.isEmpty() && !pass.isEmpty() && user.equals(userN) && role == num) {
                     reader.close();
                     return true;
@@ -111,6 +111,17 @@ public class User {
         return goodReg;
     }
     /*
+     * Simply sets the current user to blank and therefore logs the user out.
+     */
+    public boolean logout() {
+        if (this.userName.isEmpty()) {
+            return false;
+        } else {
+            setUserName("");
+            return true;
+        }
+    }
+    /*
      * Returns true if the user was registered, returns false if the user was not.
      * User would only not be registered if the user name is already taken.
      * 
@@ -137,7 +148,7 @@ public class User {
     public String getUserName() {
         return userName;
     }
-    public void setUserName(String userName) {
+    private void setUserName(String userName) {
         this.userName = userName;
     }
 }
