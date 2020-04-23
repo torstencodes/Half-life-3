@@ -67,6 +67,9 @@ public class filter {
         
         return gameList;
     }
+    /*
+     * Returns array list of games in alphabetical order (Z-A)
+     */
     public ArrayList<Game> ztoA() {
         ArrayList<Game> gameList = new ArrayList<Game>(Arrays.asList(games));
         Game dummy = null;

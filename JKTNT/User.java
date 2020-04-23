@@ -6,11 +6,14 @@ import java.util.Scanner;
 
 public class User {
     private String userName;
+    private int role;
     
     public User(String user) {
         userName = user;
     }
-    
+    /*
+     * Can look up role of any user.
+     */
     public boolean isUser(final String userN) {
        return searchFile(userN, 0);
     }
@@ -150,5 +153,19 @@ public class User {
     }
     private void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    /**
+     * @return the role
+     */
+    public int getRole() {
+        return role;
+    }
+
+    /**
+     * @param role the role to set
+     */
+    private void setRole(int role) {
+        this.role = role;
     }
 }

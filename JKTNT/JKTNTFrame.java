@@ -315,6 +315,7 @@ public class JKTNTFrame extends JFrame {
 	    } else{
 	        if (u.loginUser(userN, passW)) {
                 JOptionPane.showMessageDialog(mainScreen, "Successfully Logged In!");
+                menuBack();
                 setupBottomPanel();
 	        } else {
                 JOptionPane.showMessageDialog(mainScreen, "User name does not exist!");	            
@@ -333,6 +334,7 @@ public class JKTNTFrame extends JFrame {
 	    } else {
 	        if (u.registerUser(userN,passW)) {
 	            JOptionPane.showMessageDialog(mainScreen, "Successfully Registered!");
+	            menuBack();
 	            setupBottomPanel();
 	        } else {
 	            JOptionPane.showMessageDialog(mainScreen, "User name already taken!");
