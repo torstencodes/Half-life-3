@@ -2,7 +2,12 @@ import java.awt.*;
 
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import javax.swing.*;
 
@@ -26,13 +31,14 @@ public class JKTNTFrame extends JFrame {
 	private JButton loToHi;
 	private JButton atoZ;
 	private JButton ztoA;
+	private TextField commArea;
 	private TextField userR;
 	private TextField passR;
 	private TextField user;
 	private TextField pass;
 	private TextField searchQuery;
 	private btnListener clickListener;
-	private Game[] g;
+	private ArrayList<Game> g;
 	private User u;
 
 	public static void main(String[] args) throws InstantiationException, IllegalAccessException,
@@ -58,23 +64,15 @@ public class JKTNTFrame extends JFrame {
 		this.setLocationRelativeTo(null); // starts center screen
 		this.setLayout(new BorderLayout());
 		clickListener = new btnListener();
-		// this.setResizable(false);
 		// Line of code that says what happens when you click close
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    u = new User("");
 	    label = new JLabel("Welcome to JKTNT!");
 	    bottom = new JPanel();
-		// j.setBounds(500, 300, 800, 800);
 		// Call helper methods to set up various sections
 		setupBottomPanel();
 		setupMiddlePanel();
-		// setupBottomPanel();
 		setupGames();
-
-//		this.setLocationRelativeTo(null); // starts center screen
-//		this.setLayout(new GridLayout(10, 10));
-//		this.setVisible(true);
-//		this.setResizable(false);
 		this.pack();
 		this.setVisible(true);
 		// Initiate the user object. 
@@ -97,12 +95,6 @@ public class JKTNTFrame extends JFrame {
                 label.setText(u.getUserName() + " is logged in and is a User!");
             }
         }
-
-        // top.add(login);
-        // loadData.addActionListener(buttonListener);
-        // saveData.addActionListener(buttonListener);
-        // clear.addActionListener(buttonListener);
-
         // These anonymous JButtons should be replaced with instance variables
         bottom.add(label);
         bottom.setVisible(true);
@@ -171,36 +163,39 @@ public class JKTNTFrame extends JFrame {
         // JScrollPane scrollFrame = new JScrollPane(gamePanel);
         gamePanel.setPreferredSize(new Dimension(400, 1500));
         // scrollFrame.setPreferredSize(mainScreen.getMaximumSize());
-
         JScrollPane scroll = new JScrollPane(gamePanel);
         scroll.getVerticalScrollBar().setPreferredSize(new Dimension(15, 0));
         scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         //scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scroll.setLayout(new ScrollPaneLayout());
         scroll.setPreferredSize(new Dimension(1000, 800));
-
-        
-        
         gamePanel.setLayout(new FlowLayout());
         // mainScreen.setPreferredSize(mainScreen.getPreferredSize());
         gamePanel.setVisible(true);
         this.add(scroll, BorderLayout.CENTER);
-		g = new Game[4];
-
-//		for(int i = 4; i < g.length; i++) {
-//			g[i] = new Game("Dead Island","deadIsland.png",19.99);
-//			g[i].getButton().addActionListener(clickListener);
-//			gamePanel.add(g[i]);
-//		}
-		g[0] = new Game("Dead Island", "deadIsland.png", 14.99);
-		g[0].getButton().addActionListener(clickListener);
-		g[1] = new Game("Xcom2", "xcom2.png", 29.99);
-		g[1].getButton().addActionListener(clickListener);
-		g[2] = new Game("Tomb Rider", "tombRaider.jpg", 19.99);
-		g[2].getButton().addActionListener(clickListener);
-		g[3] = new Game("PlayerUnknown's: BattleGrounds", "pubg.jpg", 24.99);
-		g[3].getButton().addActionListener(clickListener);
+        g = readGames();
 		loadGames(g);
+	}
+	
+	@SuppressWarnings("null")
+    private ArrayList<Game> readGames() {
+	    ArrayList<Game> games = new ArrayList<Game>(0);
+	    try {
+            BufferedReader read = new BufferedReader(new FileReader("gameList.csv"));
+            String dummy;
+            for (int i = 0; (dummy = read.readLine()) != null; i++) {
+                String[] gameInfo = dummy.split(",");
+                games.add(new Game(gameInfo[0], gameInfo[1], Double.parseDouble(gameInfo[2]), gameInfo[3], gameInfo[4]));
+                games.get(i).getButton().addActionListener(clickListener);
+            }
+            read.close();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+	   
+        return games;
+	    
 	}
 
 	// testing for changing panels
@@ -208,24 +203,22 @@ public class JKTNTFrame extends JFrame {
 		gamePanel.removeAll();
 		gamePanel.add(g);
 
-		// display a description of the game
-		JTextArea description = new JTextArea();
-		description.setSize(500, 500);
-		// temporary text for 1 game
-		description.setText(
-				"XCOM 2 is a 2016 turn-based tactics video game that was developed by Firaxis Games and published by 2K Games. It is the sequel to 2012's reboot of the series XCOM: Enemy Unknown; it takes place 20 years after the events of Enemy Unknown. XCOM, a military organization trying to fight off an alien invasion, has lost the war and is now a resistance force against the occupation of Earth and the established totalitarian regime and military dictatorship. Gameplay is split between turn-based combat in which players command a squad of soldiers to fight enemies and strategy elements. Players manage and control the operations of the Avenger, a derelict alien ship that is a mobile base for XCOM, commanding the engineering and research department of the base between missions. ");
-		description.setFont(new Font("TimesRoman", Font.PLAIN, 18));
-
-		description.setEditable(false);
-		description.setLineWrap(true);
-		description.setWrapStyleWord(true);
-
 		// make the text area scrollable
-		JScrollPane scroll = new JScrollPane(description);
+		JScrollPane scroll = new JScrollPane(g.getGamePanel());
 		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		scroll.setPreferredSize(new Dimension(500, 500));
 
+		JScrollPane scroll1 = new JScrollPane(g.getCommPanel());
+        scroll1.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scroll1.setPreferredSize(new Dimension(500, 500));
+        
 		gamePanel.add(scroll);
+		gamePanel.add(scroll1);
+		
+		if (!u.getUserName().isEmpty()) {
+		   commArea = new TextField("", 100);
+		   gamePanel.add(commArea);
+		}
 
 		// create a back button to go back to home page
 		back = new JButton("Back");
@@ -264,6 +257,7 @@ public class JKTNTFrame extends JFrame {
 	    mainScreen.revalidate();
 	    mainScreen.repaint();
 	    
+	    g = readGames();
 	    loadGames(g);
 	}
 
@@ -298,6 +292,7 @@ public class JKTNTFrame extends JFrame {
 		mainScreen.revalidate();
         mainScreen.repaint();
         
+        g = readGames();
 		loadGames(g);
 	}
 	/*
@@ -397,17 +392,9 @@ public class JKTNTFrame extends JFrame {
 	 */
 	private void loadGames(ArrayList<Game> gameList) {
 	    gamePanel.removeAll();
+	    
 	    for (int i = 0; i < gameList.size(); i++) {
 	        gamePanel.add(gameList.get(i));
-	    }
-	    gamePanel.revalidate();
-	    gamePanel.repaint();
-	}
-	
-	private void loadGames(Game[] gameList) {
-	    gamePanel.removeAll();
-	    for (int i = 0; i < gameList.length; i++) {
-	        gamePanel.add(gameList[i]);
 	    }
 	    gamePanel.revalidate();
 	    gamePanel.repaint();
@@ -442,8 +429,9 @@ public class JKTNTFrame extends JFrame {
 		
 		mainScreen.revalidate();
         mainScreen.repaint();
-
-		setupGames();
+        
+        g = readGames();
+		loadGames(g);
 	}
 
 	// Sets up the bottom panel with buttons
@@ -477,12 +465,12 @@ public class JKTNTFrame extends JFrame {
 			    logoutMsg();
 			} else {
 				// react based on the game clicked
-				for (int i = 0; i < g.length; i++) {
-					if (g[i] == null) {
+				for (int i = 0; i < g.size(); i++) {
+					if (g.get(i) == null) {
 						break;
 					}
-					if (btn.equals(g[i].getButton())) {
-						displayDetailedPage(g[i]);
+					if (btn.equals(g.get(i).getButton())) {
+						displayDetailedPage(g.get(i));
 					}
 				}
 				// trying to get to a new page
