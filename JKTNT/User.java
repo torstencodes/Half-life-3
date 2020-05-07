@@ -1,5 +1,7 @@
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
@@ -7,7 +9,7 @@ import java.util.Scanner;
 public class User {
     private String userName;
     private int role;
-    
+
     public User(String user) {
         userName = user;
     }
@@ -15,43 +17,38 @@ public class User {
      * Can look up role of any user, this needs to be more efficient, 
      * searching the file everytime is no bueno.
      */
-    public boolean isUser(final String userN) {
-       return searchFile(userN, 0);
+    public boolean isUser(final String userN) throws IOException {
+        return searchFile(userN, 0);
     }
-    public boolean isAdmin(final String userN) {
-       return searchFile(userN, 2);
+    public boolean isAdmin(final String userN) throws IOException {
+        return searchFile(userN, 2);
     }
-    public boolean isMod(final String userN) {
-       return searchFile(userN, 1);
+    public boolean isMod(final String userN) throws IOException {
+        return searchFile(userN, 1);
+    }
+    public boolean postComment(final String comment, Game g, int rating) {
+        try {
+            int commCount = 0;
+            File comm = new File(g.getCommentFile());
+            FileWriter write = new FileWriter(comm, true);
+            Scanner reader = new Scanner(comm);
+            String dummy = "";
+            while (reader.hasNextLine()) {
+                dummy = reader.nextLine();
+                commCount++;
+            }
+            write.append(this.userName + "," + comment + "," + rating + "," + commCount + "\n");
+            write.close();
+            reader.close();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return true;
     }
     /*
-     * This method is super jank and could totally be written better
+     * Returns true if a userN is found or false if not.
      */
-    /*public void setRole(final String userN, final int num) throws FileNotFoundException{
-       if (isAdmin(this.userName)) {
-           try {
-               File users = new File("userlogin.csv");
-               Scanner read = new Scanner(users);
-               String[] lines = null;
-               for (int i = 0; read.hasNextLine(); i++) {
-                   lines[i] = read.nextLine();
-                   int pos = lines[i].indexOf(",");
-                   String user = lines[i].substring(0, pos);
-                   if (user == userN) {
-                       lines[i] = lines[i].substring(0, lines[i].length() - 1) + num;
-                   }
-               }
-               FileWriter write = new FileWriter(users);
-               
-               
-           } catch (FileNotFoundException e) {
-               System.out.println("Cannot find file!");
-               e.printStackTrace();
-           }
-       } else {
-           System.out.println("Not permitted!");
-       }
-    }*/
     private boolean searchFile(String userN, int num) {
         try {
             File users = new File("userlogin.csv");
@@ -111,11 +108,11 @@ public class User {
      * @param passW - The password read in from the text field
      */
     public boolean loginUser(final String userN, final String passW) {
-        final boolean goodReg = searchFile(userN, passW);
-        if (goodReg) {
+        final boolean goodLog = searchFile(userN, passW);
+        if (goodLog) {
             setUserName(userN);
         }
-        return goodReg;
+        return goodLog;
     }
     /*
      * Simply sets the current user to blank and therefore logs the user out.

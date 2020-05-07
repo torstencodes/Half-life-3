@@ -7,15 +7,16 @@ public class Comment {
     private String user;
     private String comment;
     private int rating;
-    private ArrayList<Comment> replies;
+    private int commentNum;
     private JButton upDoot;
     private JButton downDoot;
     private JButton reply;
     
-    public Comment(String user, String comment, int rating) {
-        this.user = user;
-        this.comment = comment;
-        this.rating = rating;
+    public Comment(String user, String comment, int rating, int commNum) {
+        setUser(user);
+        setComment(comment);
+        setRating(rating);
+        setCommentNum(commNum);
         upDoot = new JButton("/\\");
         upDoot.setPreferredSize(new Dimension(5, 5));
         downDoot = new JButton("\\/");
@@ -33,7 +34,7 @@ public class Comment {
     /**
      * @param user the user to set
      */
-    public void setUser(String user) {
+    private void setUser(String user) {
         this.user = user;
     }
     /**
@@ -45,7 +46,7 @@ public class Comment {
     /**
      * @param comment the comment to set
      */
-    public void setComment(String comment) {
+    private void setComment(String comment) {
         this.comment = comment;
     }
     /**
@@ -57,21 +58,21 @@ public class Comment {
     /**
      * @param rating the rating to set
      */
-    public void setRating(int rating) {
+    private void setRating(int rating) {
         this.rating = rating;
     }
     /**
-     * @return the replies
+     * @return the commentNum
      */
-    public ArrayList<Comment> getReplies() {
-        return replies;
+    public int getCommentNum() {
+        return commentNum;
     }
     /**
-     * @param replies the replies to set
+     * @param commentNum the commentNum to set
      */
-    public void setReplies(ArrayList<Comment> replies) {
-        this.replies = replies;
+    private void setCommentNum(int commentNum) {
+        this.commentNum = commentNum;
     }
-    
+
     
 }
