@@ -14,30 +14,33 @@ public class Moderator extends User {
      * 
      * This will break later because there will be repeat IDs
      */
-    public boolean deleteComment(final String commFile, final int commId) {
+    public boolean deleteComment(final Game g, final int commId) {
         boolean success = false;
         try {
             
-            File input = new File(commFile);
+            File input = new File(g.getCommentFile());
             File temp = new File("temp.csv");
         
             Scanner reader = new Scanner(input);
             FileWriter write = new FileWriter(temp, true);
             
             String dummy;
-            
-            while ((dummy = reader.nextLine()) != null) {
+            int i = 0;
+            while (reader.hasNextLine()) {
+                dummy = reader.nextLine();
                 String[] commInfo = dummy.split(",");
-                if (Integer.parseInt(commInfo[2]) == commId) {
+                if (Integer.parseInt(commInfo[3]) == commId) {
                     success = true;
                     continue;
                 } else {
-                    write.append(dummy);
+                    write.append(commInfo[0] + "," + commInfo[1] + "," + commInfo[2] + "," + i + "\n");
+                    i++;
                 }
             }
             write.close();
             reader.close();
-            temp.renameTo(input);
+            input.delete();
+            temp.renameTo(input);           
         } catch (IOException e) {           
             // TODO Auto-generated catch block
             e.printStackTrace();

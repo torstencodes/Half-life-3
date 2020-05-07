@@ -9,6 +9,41 @@ public class filter {
         games = list;
     }
     /*
+     * Using bubble sort to sort games based on rating from high to low
+     */
+    public ArrayList<Game> rateHitoLo() {
+        ArrayList<Game> gameList = new ArrayList<Game>(games);
+        Game dummy = null;
+        for (int i = 0; i < gameList.size(); i++) {
+            for (int j = 1; j < (gameList.size()); j++) {
+                if (gameList.get(j - 1).getGameRating() < gameList.get(j).getGameRating()) {
+                    dummy = gameList.get(j - 1);
+                    gameList.set(j - 1, gameList.get(j));
+                    gameList.set(j, dummy);
+                }
+            }
+        }
+        return gameList;
+    } 
+
+    /*
+     * Using bubble sort to sort games based on rating going from low to high
+     */
+    public ArrayList<Game> rateLotoHi() {
+        Game dummy = null;
+        ArrayList<Game> gameList = new ArrayList<Game>(games);
+        for (int i = 0; i < gameList.size(); i++) {
+            for (int j = 1; j < (gameList.size()); j++) {
+                if (gameList.get(j - 1).getGameRating() > gameList.get(j).getGameRating()) {
+                    dummy = gameList.get(j - 1);
+                    gameList.set(j - 1, gameList.get(j));
+                    gameList.set(j, dummy);
+                }
+            }
+        }
+        return gameList;
+    }
+    /*
      * Using bubble sort to sort games based on price going from high to low
      */
     public ArrayList<Game> priceLotoHi() {
@@ -43,11 +78,7 @@ public class filter {
         }
         return gameList;
     } 
-    public ArrayList<Game> sortRating() {
-        ArrayList<Game> gameList = new ArrayList<Game>(games);
-        
-        return gameList;
-    }
+
     /*
      * Returns array list of games in alphabetical order
      */

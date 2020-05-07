@@ -30,6 +30,8 @@ public class JKTNTFrame extends JFrame {
     private JButton submitComm;
     private JButton submitReq;
     private JButton adminPage;
+    private JButton removeCommB;
+    private TextField removeCommA;
     private TextField commArea;
     private TextField userR;
     private TextField passR;
@@ -44,10 +46,10 @@ public class JKTNTFrame extends JFrame {
     private User u;
     private Admin a;
     private Moderator m;
-    
+
 
     public static void main(String[] args) throws InstantiationException, IllegalAccessException,
-            UnsupportedLookAndFeelException, ClassNotFoundException {
+    UnsupportedLookAndFeelException, ClassNotFoundException {
         // gets the sleek look
         for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
             if ("Nimbus".equals(info.getName())) {
@@ -60,7 +62,7 @@ public class JKTNTFrame extends JFrame {
     }
 
     public JKTNTFrame() throws ClassNotFoundException, InstantiationException, IllegalAccessException,
-            UnsupportedLookAndFeelException {
+    UnsupportedLookAndFeelException {
         // creates the window
         super("JKTNT Window");
         // Line of code to set the size and location
@@ -105,29 +107,29 @@ public class JKTNTFrame extends JFrame {
         // These anonymous JButtons should be replaced with instance variables
         bottom.add(label);
         bottom.setVisible(true);
-        
+
         bottom.revalidate();
         bottom.repaint();
         // Once the panel is set up, add it to the frame
         this.add(bottom, BorderLayout.SOUTH);
 
     }
-    
+
     private void setupMiddlePanel() {
         mainScreen = new JKTNTPanel();
         mainScreen.setLayout(new FlowLayout());
         mainScreen.setPreferredSize(new Dimension(1000, 100));
-      
-        
+
+
         JLabel sort = new JLabel("Sort By:");
         mainScreen.add(sort);
         //add a selection box for sorting, to add more item just add to the string [] 
         //and change the filter method
-        String[] selection = {"A->Z", "Z->A", "High->Low", "Low->High"};
+        String[] selection = {"A->Z", "Z->A", "High->Low", "Low->High", "Rate:High->Low", "Rate:Low->High"};
         box = new JComboBox<String>(selection);
         box.addActionListener(clickListener);
         mainScreen.add(box);
-        
+
         Integer[] select = {0, 1, 2, 3, 4, 5};
         rateBox = new JComboBox<>(select);
         rateBox.addActionListener(clickListener);
@@ -142,19 +144,19 @@ public class JKTNTFrame extends JFrame {
         clear = new JButton("Clear");
         mainScreen.add(clear);
         clear.addActionListener(clickListener);
-        
+
         // creates a Login button with event listener attached
         loginSet = new JButton("Login");
         mainScreen.add(loginSet);
         loginSet.addActionListener(clickListener);
-        
+
         // Create a register button with event listener
         registerSet = new JButton("register");
         mainScreen.add(registerSet);
         registerSet.addActionListener(clickListener);
 
         mainScreen.setVisible(true);
-        
+
         this.add(mainScreen, BorderLayout.NORTH);
     }
 
@@ -171,7 +173,7 @@ public class JKTNTFrame extends JFrame {
         g = readGames();
         loadGames(g);
         filterPrice("");
-        
+
         //Change the scroll bar dynamically corresponding to the window size and game entries.
         scroll.addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent componentEvent) {
@@ -180,7 +182,7 @@ public class JKTNTFrame extends JFrame {
                     len = g.size() * 330 ;
                     gamePanel.setPreferredSize(new Dimension(400, len));
                 } else if (mainScreen.getWidth() > 530 && mainScreen.getWidth() < 790) {
-                    
+
                     len = g.size() * 165 ;
                     gamePanel.setPreferredSize(new Dimension(400, len));
                 } else if (mainScreen.getWidth() > 790 && mainScreen.getWidth() < 1040) {
@@ -193,11 +195,11 @@ public class JKTNTFrame extends JFrame {
                 }
             }
         });
-            
-            
-         
+
+
+
     }
-    
+
     private ArrayList<Game> readGames() {
         ArrayList<Game> games = new ArrayList<Game>(0);
         try {
@@ -215,39 +217,46 @@ public class JKTNTFrame extends JFrame {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-       
+
         return games;
-        
+
     }
 
     // testing for changing panels
     private void displayDetailedPage(Game g) {
         gamePanel.removeAll();
-        gamePanel.add(g);
-        
+        gamePanel.add(g, BorderLayout.WEST);
         JPanel bot = new JPanel();
 
         // make the text area scrollable
         JScrollPane scroll = new JScrollPane(g.getGamePanel());
         scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scroll.setPreferredSize(new Dimension(1000, 500));
-        
-        gamePanel.add(scroll, BorderLayout.NORTH);
-        
+
+        gamePanel.add(scroll, BorderLayout.CENTER);
+
         if (!u.getUserName().isEmpty() || !m.getUserName().isEmpty() || !a.getUserName().isEmpty()) {
-           commArea = new TextField("", 100);
-           submitComm = new JButton("submit");
-           submitComm.addActionListener(clickListener);
-           bot.add(new JLabel("Comment:"));
-           bot.add(commArea);
-           bot.add(new JLabel("Rating:"));
-           bot.add(rateBox);
-           bot.add(submitComm);
+            if (!m.getUserName().isEmpty()) {
+                removeCommA = new TextField("", 10);
+                removeCommB = new JButton("Remove");
+                removeCommB.addActionListener(clickListener);
+                bot.add(new JLabel("Enter ID to remove:"), BorderLayout.SOUTH);
+                bot.add(removeCommA, BorderLayout.SOUTH);
+                bot.add(removeCommB, BorderLayout.SOUTH);
+            }
+            commArea = new TextField("", 100);
+            submitComm = new JButton("submit");
+            submitComm.addActionListener(clickListener);
+            bot.add(new JLabel("Comment:"));
+            bot.add(commArea, BorderLayout.NORTH);
+            bot.add(new JLabel("Rating:"));
+            bot.add(rateBox, BorderLayout.NORTH);
+            bot.add(submitComm, BorderLayout.NORTH);
         }
 
         // create a back button to go back to home page
         back = new JButton("Back");
-        bot.add(back);
+        bot.add(back, BorderLayout.NORTH);
         back.addActionListener(clickListener);
         gamePanel.add(bot, BorderLayout.SOUTH);
         gamePanel.revalidate();
@@ -260,7 +269,7 @@ public class JKTNTFrame extends JFrame {
      */
     private void registerUser() {
         mainScreen.removeAll();
-        
+
         JLabel uname = new JLabel("Enter Username");
         JLabel pwd = new JLabel("Enter Password");
         userR = new TextField("", 20);
@@ -269,19 +278,19 @@ public class JKTNTFrame extends JFrame {
         mainScreen.add(userR);
         mainScreen.add(pwd);
         mainScreen.add(passR);
-        
+
         registerCheck = new JButton("Register");
         mainScreen.add(registerCheck);
         registerCheck.addActionListener(clickListener);
-        
+
         menuBackBtn = new JButton("Back");
         menuBackBtn.addActionListener(clickListener);
         mainScreen.add(menuBackBtn);
         mainScreen.setVisible(true);
-        
+
         mainScreen.revalidate();
         mainScreen.repaint();
-        
+
         g = readGames();
         loadGames(g);
     }
@@ -311,10 +320,10 @@ public class JKTNTFrame extends JFrame {
         menuBackBtn.addActionListener(clickListener);
         mainScreen.add(menuBackBtn);
         mainScreen.setVisible(true);
-        
+
         mainScreen.revalidate();
         mainScreen.repaint();
-        
+
         g = readGames();
         loadGames(g);
     }
@@ -413,13 +422,17 @@ public class JKTNTFrame extends JFrame {
     private void filterPrice(String btn) {
         gamePanel.removeAll();
         filter sort = new filter(g);
-        ArrayList<Game> gameList;
+        ArrayList<Game> gameList = new ArrayList<Game>(0);
         if (btn.equals("High->Low")) {
             gameList = sort.priceHitoLo();
         } else if (btn.equals("Low->High")){
             gameList = sort.priceLotoHi();
         } else if (btn.equals("Z->A")) {
             gameList = sort.ztoA();
+        } else if (btn.equals("Rate:High->Low")) { 
+            gameList = sort.rateHitoLo();
+        } else if (btn.equals("Rate:Low->High")) { 
+            gameList = sort.rateLotoHi();
         } else {
             gameList = sort.atoZ();
         }
@@ -431,7 +444,7 @@ public class JKTNTFrame extends JFrame {
      */
     private void loadGames(ArrayList<Game> gameList) {
         gamePanel.removeAll();
-        
+
         for (int i = 0; i < gameList.size(); i++) {
             if (gameList.get(i).getShowGame()) {
                 gamePanel.add(gameList.get(i));
@@ -442,11 +455,10 @@ public class JKTNTFrame extends JFrame {
     }
 
     private void menuBack() {
-        mainScreen.removeAll();
-        
+        mainScreen.removeAll();     
         JLabel sort = new JLabel("Sort By:");
         mainScreen.add(sort);
-        
+
         mainScreen.add(box);
         // creates a Search button with event listener attached
         mainScreen.add(search);
@@ -456,8 +468,7 @@ public class JKTNTFrame extends JFrame {
         mainScreen.add(clear);
         // creates a Login button with event listener attached
         if (u.getUserName().isEmpty() && m.getUserName().isEmpty() && a.getUserName().isEmpty()) {
-            mainScreen.add(loginSet);
-                
+            mainScreen.add(loginSet);                
             mainScreen.add(registerSet);
         } else {
             logoutBtn = new JButton("Logout");
@@ -473,10 +484,10 @@ public class JKTNTFrame extends JFrame {
             mainScreen.add(adminPage);
             adminPage.addActionListener(clickListener);
         }
-        
+
         mainScreen.revalidate();
         mainScreen.repaint();
-        
+
         g = readGames();
         loadGames(g);
     }
@@ -513,8 +524,10 @@ public class JKTNTFrame extends JFrame {
                 displayDetailedPage(g.get(currGame));
             } else if (btn == box) {
                 filterPrice((String)box.getSelectedItem());
-            }else if (btn == logoutBtn) {
+            } else if (btn == logoutBtn) {
                 logoutMsg();
+            } else if (btn == removeCommB) {
+                removeComment();
             } else {
                 // react based on the game clicked
                 for (int i = 0; i < g.size(); i++) {
@@ -528,6 +541,24 @@ public class JKTNTFrame extends JFrame {
                 }
                 // trying to get to a new page
             }
+        }
+
+        private void removeComment() {
+            // TODO Auto-generated method stub
+            //try {
+                int id = Integer.parseInt(removeCommA.getText());
+                boolean success = m.deleteComment(g.get(currGame), id);
+                if (success) {
+                    g = readGames();
+                    loadGames(g);
+                    displayDetailedPage(g.get(currGame));
+                } else {
+                    JOptionPane.showMessageDialog(mainScreen, "Couldn't find comment ID!");
+                }
+                
+            //} catch (Exception e) {
+            //    JOptionPane.showMessageDialog(mainScreen, "Enter a valid comment ID!");
+            //}
         }
 
     }
